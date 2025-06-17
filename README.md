@@ -47,4 +47,10 @@ docker run -d --name data-screen-app -p 80:5000 crpi-wjovngju7gnou1od.cn-guangzh
 ### 添加/修改主机
 ![image](https://github.com/Secret1006/data-screen/blob/master/images/5.png)
 ![image](https://github.com/Secret1006/data-screen/blob/master/images/7.png)
-
+### 添加主机分组
+![image](https://github.com/Secret1006/data-screen/blob/master/images/12.png)
+![image](https://github.com/Secret1006/data-screen/blob/master/images/13.png)
+### 主机状态监控页面效果
+![image](https://github.com/Secret1006/data-screen/blob/master/images/10.png)
+### 点击右上角图标进入全屏模式
+![image](https://github.com/Secret1006/data-screen/blob/master/images/11.png)
