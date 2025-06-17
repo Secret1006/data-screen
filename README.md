@@ -39,6 +39,12 @@ docker run -d --name data-screen-app -p 80:5000 crpi-wjovngju7gnou1od.cn-guangzh
 ### 管理员登录页面
 ![image](https://github.com/Secret1006/data-screen/blob/master/images/1.png)
 ### 初次登录主机状态监控页面
-![image]()
-
+![image](https://github.com/Secret1006/data-screen/blob/master/images/2.png)
+### 点击"修改密码"按钮跳转至管理员密码修改页面
+![image](https://github.com/Secret1006/data-screen/blob/master/images/3.png)
+### 点击"主机管理"按钮跳转至主机管理页面
+![image](https://github.com/Secret1006/data-screen/blob/master/images/4.png)
+### 添加/修改主机
+![image](https://github.com/Secret1006/data-screen/blob/master/images/5.png)
+![image](https://github.com/Secret1006/data-screen/blob/master/images/7.png)
 
