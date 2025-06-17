@@ -2,38 +2,39 @@
 
 基于Docker容器技术和Ansible自动化运维技术的主机状态监控系统，通过Web界面实时展示主机状态，并支持主机分组管理。
 
+#### 该项目镜像已上传至阿里云  
+```bash
+docker pull crpi-wjovngju7gnou1od.cn-guangzhou.personal.cr.aliyuncs.com/hupeiye/data-screen:latest
+```
 
 ## ✨ 功能亮点
 - 🌌 **科技风格大屏界面**：深蓝色科技风格，更适合监控应用场景
 - 🔧 **主机分组管理**：可对主机分组进行增删改查操作
 - 🔄 **实时状态监控**：手动/自动刷新主机状态（30秒间隔）
-- 🖥️ **全屏模式**：一键切换全屏显示，适合大屏监控场景
+- 🖥️ **全屏模式**：一键切换全屏显示，满足大屏监控需求
 - 🔍 **主机搜索**：快速查找指定IP的主机
-- 🔒 **管理员系统**：安全登录和找回密码功能
+- 🔒 **管理员登录**：安全登录和找回密码功能
 - ⚡ **一键部署**：通过部署脚本快速部署整个系统
 
 ## 📖 使用说明
-🔑 **登录系统**：
-- 初始管理员账号：admin
-- 初始临时密码：admin23(首次登录后请立即修改)
+- **系统应用部署**：
   
-📊 主机监控大屏：  
--主页面展示所有主机状态  
--每30秒自动刷新数据  
--点击"刷新"按钮手动刷新  
--可通过搜索框按IP搜索主机  
--点击右上角"全屏"按钮可进入全屏监控模式
+  方式一：下载该项目文件并调用项目文件中的主部署脚本（scripts/deploy_main.sh）一键部署（配置docker网络+部署应用）
+  
+  方式二：拉取阿里云镜像
+```bash
+# 从阿里云拉取镜像
+docker pull crpi-wjovngju7gnou1od.cn-guangzhou.personal.cr.aliyuncs.com/hupeiye/data-screen:latest
 
-🛠️ 主机管理：
+# 运行容器
+docker run -d --name data-screen-app -p 80:5000 crpi-wjovngju7gnou1od.cn-guangzhou.personal.cr.aliyuncs.com/hupeiye/data-screen
+```
 
-添加主机：填写IP和分组信息
+- **管理员登录系统**：
+    
+  初始临时账号：admin  
+  初始临时密码：admin123 (首次登录后请立即修改)  
+  
 
-编辑主机：修改主机信息
 
-删除主机：从监控列表中移除
-
-搜索主机：按IP或分组筛选
-
-🔐 密码管理：
-
-登录后可通过"修改密码"功能更新密码
+## 🖼️ 效果演示
