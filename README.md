@@ -17,11 +17,11 @@ docker pull crpi-wjovngju7gnou1od.cn-guangzhou.personal.cr.aliyuncs.com/hupeiye/
 - ⚡ **一键部署**：通过部署脚本快速部署整个系统（配置docker网络+部署应用）
 
 ## 📖 使用说明
-- **系统应用部署**：
+### 系统应用部署：
   
-  方式一：下载该项目文件并调用项目文件中的主部署脚本（scripts/deploy_main.sh）一键部署（配置docker网络+部署应用）
+  方式1：下载该项目文件并调用项目文件中的主部署脚本（scripts/deploy_main.sh）一键部署（配置docker网络+部署应用）
   
-  方式二：拉取阿里云镜像
+  方式2：拉取阿里云镜像
 ```bash
 # 从阿里云拉取镜像
 docker pull crpi-wjovngju7gnou1od.cn-guangzhou.personal.cr.aliyuncs.com/hupeiye/data-screen:latest
@@ -30,11 +30,15 @@ docker pull crpi-wjovngju7gnou1od.cn-guangzhou.personal.cr.aliyuncs.com/hupeiye/
 docker run -d --name data-screen-app -p 80:5000 crpi-wjovngju7gnou1od.cn-guangzhou.personal.cr.aliyuncs.com/hupeiye/data-screen
 ```
 
-- **管理员登录系统**：
+### 管理员登录系统：
     
   初始临时账号：admin  
   初始临时密码：admin123 (首次登录后请立即修改)  
-  
-
 
 ## 🖼️ 效果演示
+### 管理员登录页面
+![image](https://github.com/Secret1006/data-screen/blob/master/images/1.png)
+### 初次登录主机状态监控页面
+![image]()
+
+
