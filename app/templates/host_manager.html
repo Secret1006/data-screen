@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主机管理</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- 标题区域 -->
+        <header class="dashboard-header">
+            <div class="header-left">
+                <h1><i class="fas fa-server"></i> 主机管理系统</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="usernameDisplay">{{ username }}</span>
+                </div>
+                <button id="backToDashboard" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> 返回监控
+                </button>
+                <button id="logoutBtn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> 注销
+                </button>
+            </div>
+        </header>
+        
+        <div class="host-manager-container">
+            <!-- 组管理区域 -->
+            <div class="groups-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-layer-group"></i> 主机组管理</h2>
+                    <!-- 组搜索框 -->
+                    <div class="group-search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="groupSearch" placeholder="搜索组名..." title="输入组名进行搜索">
+                        <button id="clearGroupSearchBtn" class="clear-search-btn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 组列表区域 -->
+                <div class="groups-list-wrapper">
+                    <div class="groups-list" id="groupsList">
+                        <!-- 动态填充 -->
+                    </div>
+                </div>
+                
+                <!-- 添加新组表单区域 -->
+                <div class="add-group-form-wrapper">
+                    <div class="add-group-form">
+                        <h3><i class="fas fa-plus-circle"></i> 添加新组</h3>
+                        <form id="addGroupForm">
+                            <div class="form-group">
+                                <label for="newGroupName">组名称:</label>
+                                <input type="text" id="newGroupName" name="newGroupName" 
+                                       placeholder="例如: webservers" required>
+                            </div>
+                            <button type="submit" class="submit-btn">
+                                <i class="fas fa-plus"></i> 添加组
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 主机管理区域 -->
+            <div class="hosts-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-tasks"></i> 主机管理</h2>
+                    <div class="hosts-header-controls">
+                        <div class="group-selector">
+                            <label for="hostGroupSelect"><i class="fas fa-filter"></i> 选择组:</label>
+                            <select id="hostGroupSelect">
+                                <option value="">-- 所有组 --</option>
+                                <!-- 动态填充 -->
+                            </select>
+                        </div>
+                        <!-- 主机搜索框 -->
+                        <div class="host-search-container">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" id="hostSearch" placeholder="搜索主机IP..." title="输入主机IP进行搜索">
+                            <button id="clearHostSearchBtn" class="clear-search-btn">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 主机列表区域 -->
+                <div class="hosts-table-container">
+                    <table class="hosts-manager-table">
+                        <thead>
+                            <tr>
+                                <th>主机IP</th>
+                                <th>用户名</th>
+                                <th>密码</th>
+                                <th>端口</th>
+                                <th>所属组</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hostsManagerBody">
+                            <!-- 动态填充 -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- 添加新主机表单区域 -->
+                <div class="add-host-form">
+                    <h3><i class="fas fa-plus-circle"></i> 添加新主机</h3>
+                    <form id="addHostForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="newHostIp">主机IP:</label>
+                                <input type="text" id="newHostIp" name="newHostIp" 
+                                       placeholder="例如: 192.168.1.100" required
+                                       pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}">
+                            </div>
+                            <div class="form-group">
+                                <label for="newHostGroup">所属组:</label>
+                                <select id="newHostGroup" name="newHostGroup" required>
+                                    <option value="">-- 选择组 --</option>
+                                    <!-- 动态填充 -->
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="newHostUser">用户名:</label>
+                                <input type="text" id="newHostUser" name="newHostUser" 
+                                       value="root" placeholder="默认: root">
+                            </div>
+                            <div class="form-group">
+                                <label for="newHostPort">端口:</label>
+                                <input type="text" id="newHostPort" name="newHostPort" 
+                                       value="22" placeholder="默认: 22">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="newHostPassword">密码:</label>
+                            <input type="password" id="newHostPassword" name="newHostPassword" required>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-plus"></i> 添加主机
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 编辑主机模态框 -->
+        <div id="editHostModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-edit"></i> 编辑主机</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <form id="editHostForm">
+                        <input type="hidden" id="editOriginalIp" name="originalIp">
+                        <input type="hidden" id="editOriginalGroup" name="originalGroup">
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editHostIp">主机IP:</label>
+                                <input type="text" id="editHostIp" name="editHostIp" required
+                                       pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}">
+                            </div>
+                            <div class="form-group">
+                                <label for="editHostGroup">所属组:</label>
+                                <select id="editHostGroup" name="editHostGroup" required>
+                                    <!-- 动态填充 -->
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editHostUser">用户名:</label>
+                                <input type="text" id="editHostUser" name="editHostUser">
+                            </div>
+                            <div class="form-group">
+                                <label for="editHostPort">端口:</label>
+                                <input type="text" id="editHostPort" name="editHostPort">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="editHostPassword">密码:</label>
+                            <input type="password" id="editHostPassword" name="editHostPassword">
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="submit-btn">
+                                <i class="fas fa-save"></i> 保存更改
+                            </button>
+                            <button type="button" id="cancelEditBtn" class="cancel-btn">
+                                <i class="fas fa-times"></i> 取消
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 获取主机数据
+        async function getHostsData() {
+            try {
+                const response = await fetch('/api/hosts');
+                const data = await response.json();
+                return data.groups || {};
+            } catch (error) {
+                console.error('获取主机数据失败:', error);
+                return {};
+            }
+        }
+        
+        // 渲染组列表
+        async function renderGroupsList() {
+            const groups = await getHostsData();
+            const groupsList = document.getElementById('groupsList');
+            groupsList.innerHTML = '';
+            
+            if (Object.keys(groups).length === 0) {
+                groupsList.innerHTML = '<div class="no-groups">没有找到主机组</div>';
+                return;
+            }
+            
+            for (const [groupName, hosts] of Object.entries(groups)) {
+                const groupItem = document.createElement('div');
+                groupItem.className = 'group-item';
+                groupItem.dataset.group = groupName;
+                groupItem.innerHTML = `
+                    <div class="group-header">
+                        <i class="fas fa-folder"></i>
+                        <span class="group-name">${groupName}</span>
+                        <span class="host-count">(${hosts.length} 台主机)</span>
+                    </div>
+                    <div class="group-actions">
+                        <button class="delete-group-btn" data-group="${groupName}">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                `;
+                groupsList.appendChild(groupItem);
+            }
+            
+            // 绑定删除组事件
+            document.querySelectorAll('.delete-group-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const groupName = btn.getAttribute('data-group');
+                    if (confirm(`确定要删除组 "${groupName}" 吗？这将删除组内所有主机！`)) {
+                        try {
+                            const response = await fetch('/api/hosts', {
+                                method: 'DELETE',
+                                headers: {'Content-Type': 'application/json'},
+                                body: JSON.stringify({
+                                    action: 'delete_group',
+                                    group_name: groupName
+                                })
+                            });
+                            
+                            const result = await response.json();
+                            
+                            if (response.ok) {
+                                alert(result.message);
+                                await renderGroupsList();
+                                await renderHostsTable();
+                                updateGroupSelectors();
+                            } else {
+                                alert(`错误: ${result.error}`);
+                            }
+                        } catch (error) {
+                            console.error('删除组失败:', error);
+                            alert('删除组失败，请查看日志');
+                        }
+                    }
+                });
+            });
+        }
+        
+        // 渲染主机表格
+        async function renderHostsTable() {
+            const groups = await getHostsData();
+            const hostsBody = document.getElementById('hostsManagerBody');
+            const selectedGroup = document.getElementById('hostGroupSelect').value;
+            const hostSearchTerm = document.getElementById('hostSearch').value.toLowerCase();
+            
+            hostsBody.innerHTML = '';
+            
+            let hasHosts = false;
+            
+            for (const [groupName, hosts] of Object.entries(groups)) {
+                // 如果选择了特定组，跳过其他组
+                if (selectedGroup && selectedGroup !== groupName) continue;
+                
+                for (const host of hosts) {
+                    // 如果搜索框有内容，检查主机IP是否匹配
+                    if (hostSearchTerm && !host.ip.toLowerCase().includes(hostSearchTerm)) {
+                        continue;
+                    }
+                    
+                    hasHosts = true;
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${host.ip}</td>
+                        <td>${host.ansible_user || 'root'}</td>
+                        <td>${host.ansible_password ? '••••••' : '未设置'}</td>
+                        <td>${host.ansible_port || '22'}</td>
+                        <td>${groupName}</td>
+                        <td class="actions-cell">
+                            <button class="edit-host-btn" 
+                                data-ip="${host.ip}" 
+                                data-group="${groupName}"
+                                data-user="${host.ansible_user || ''}"
+                                data-password="${host.ansible_password || ''}"
+                                data-port="${host.ansible_port || ''}">
+                                <i class="fas fa-edit"></i> 编辑
+                            </button>
+                            <button class="delete-host-btn" 
+                                data-ip="${host.ip}" 
+                                data-group="${groupName}">
+                                <i class="fas fa-trash-alt"></i> 删除
+                            </button>
+                        </td>
+                    `;
+                    hostsBody.appendChild(row);
+                }
+            }
+            
+            if (!hasHosts) {
+                let message = '没有找到主机';
+                if (selectedGroup) message = `"${selectedGroup}" 组中没有主机`;
+                if (hostSearchTerm) message = `没有找到匹配 "${hostSearchTerm}" 的主机`;
+                
+                hostsBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="no-data">
+                            ${message}
+                        </td>
+                    </tr>
+                `;
+            }
+            
+            // 绑定编辑主机事件
+            document.querySelectorAll('.edit-host-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const ip = btn.getAttribute('data-ip');
+                    const group = btn.getAttribute('data-group');
+                    const user = btn.getAttribute('data-user');
+                    const password = btn.getAttribute('data-password');
+                    const port = btn.getAttribute('data-port');
+                    
+                    openEditModal(ip, group, user, password, port);
+                });
+            });
+            
+            // 绑定删除主机事件
+            document.querySelectorAll('.delete-host-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const ip = btn.getAttribute('data-ip');
+                    const group = btn.getAttribute('data-group');
+                    
+                    if (confirm(`确定要删除主机 ${ip} 吗？`)) {
+                        try {
+                            const response = await fetch('/api/hosts', {
+                                method: 'DELETE',
+                                headers: {'Content-Type': 'application/json'},
+                                body: JSON.stringify({
+                                    action: 'delete_host',
+                                    group_name: group,
+                                    host_ip: ip
+                                })
+                            });
+                            
+                            const result = await response.json();
+                            
+                            if (response.ok) {
+                                alert(result.message);
+                                await renderHostsTable();
+                            } else {
+                                alert(`错误: ${result.error}`);
+                            }
+                        } catch (error) {
+                            console.error('删除主机失败:', error);
+                            alert('删除主机失败，请查看日志');
+                        }
+                    }
+                });
+            });
+        }
+        
+        // 应用组搜索
+        function applyGroupSearch() {
+            const searchTerm = document.getElementById('groupSearch').value.toLowerCase();
+            const groupItems = document.querySelectorAll('.group-item');
+            
+            let hasResults = false;
+            
+            groupItems.forEach(item => {
+                const groupName = item.dataset.group.toLowerCase();
+                if (groupName.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                    hasResults = true;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // 如果没有匹配项，显示提示
+            const noGroups = document.querySelector('.no-groups');
+            if (!hasResults) {
+                if (!noGroups) {
+                    const noGroupsDiv = document.createElement('div');
+                    noGroupsDiv.className = 'no-groups';
+                    noGroupsDiv.textContent = '没有找到匹配的组';
+                    document.getElementById('groupsList').appendChild(noGroupsDiv);
+                }
+            } else if (noGroups) {
+                noGroups.remove();
+            }
+        }
+        
+        // 更新组选择器
+        async function updateGroupSelectors() {
+            const groups = await getHostsData();
+            const groupSelect = document.getElementById('hostGroupSelect');
+            const newHostGroup = document.getElementById('newHostGroup');
+            const editHostGroup = document.getElementById('editHostGroup');
+            
+            // 清空并添加选项
+            const groupOptions = Object.keys(groups).map(group => 
+                `<option value="${group}">${group}</option>`
+            ).join('');
+            
+            groupSelect.innerHTML = '<option value="">-- 所有组 --</option>' + groupOptions;
+            newHostGroup.innerHTML = '<option value="">-- 选择组 --</option>' + groupOptions;
+            editHostGroup.innerHTML = '<option value="">-- 选择组 --</option>' + groupOptions;
+        }
+        
+        // 打开编辑模态框
+        function openEditModal(ip, group, user, password, port) {
+            document.getElementById('editOriginalIp').value = ip;
+            document.getElementById('editOriginalGroup').value = group;
+            document.getElementById('editHostIp').value = ip;
+            document.getElementById('editHostUser').value = user || '';
+            document.getElementById('editHostPassword').value = password || '';
+            document.getElementById('editHostPort').value = port || '22';
+            
+            // 设置组选择
+            const editHostGroup = document.getElementById('editHostGroup');
+            for (let i = 0; i < editHostGroup.options.length; i++) {
+                if (editHostGroup.options[i].value === group) {
+                    editHostGroup.selectedIndex = i;
+                    break;
+                }
+            }
+            
+            document.getElementById('editHostModal').style.display = 'block';
+        }
+        
+        // 关闭编辑模态框
+        function closeEditModal() {
+            document.getElementById('editHostModal').style.display = 'none';
+        }
+        
+        // 页面加载后初始化
+        document.addEventListener('DOMContentLoaded', async () => {
+            // 渲染初始数据
+            await renderGroupsList();
+            await updateGroupSelectors();
+            await renderHostsTable();
+            
+            // 添加组表单提交
+            document.getElementById('addGroupForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const groupName = document.getElementById('newGroupName').value.trim();
+                
+                if (!groupName) {
+                    alert("组名不能为空");
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/api/hosts', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            action: 'add_group',
+                            group_name: groupName
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        alert(result.message);
+                        document.getElementById('newGroupName').value = '';
+                        await renderGroupsList();
+                        await updateGroupSelectors();
+                    } else {
+                        alert(`错误: ${result.error}`);
+                    }
+                } catch (error) {
+                    console.error('添加组失败:', error);
+                    alert('添加组失败，请查看日志');
+                }
+            });
+            
+            // 添加主机表单提交
+            document.getElementById('addHostForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const ip = document.getElementById('newHostIp').value.trim();
+                const group = document.getElementById('newHostGroup').value;
+                const user = document.getElementById('newHostUser').value.trim() || 'root';
+                const password = document.getElementById('newHostPassword').value;
+                const port = document.getElementById('newHostPort').value.trim() || '22';
+                
+                if (!ip || !group) {
+                    alert("主机IP和所属组不能为空");
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/api/hosts', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            action: 'add_host',
+                            group_name: group,
+                            host: {
+                                ip: ip,
+                                user: user,
+                                password: password,
+                                port: port
+                            }
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        alert(result.message);
+                        document.getElementById('newHostIp').value = '';
+                        document.getElementById('newHostPassword').value = '';
+                        await renderHostsTable();
+                    } else {
+                        alert(`错误: ${result.error}`);
+                    }
+                } catch (error) {
+                    console.error('添加主机失败:', error);
+                    alert('添加主机失败，请查看日志');
+                }
+            });
+            
+            // 编辑主机表单提交
+            document.getElementById('editHostForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const originalIp = document.getElementById('editOriginalIp').value;
+                const originalGroup = document.getElementById('editOriginalGroup').value;
+                const newIp = document.getElementById('editHostIp').value.trim();
+                const newGroup = document.getElementById('editHostGroup').value;
+                const user = document.getElementById('editHostUser').value.trim() || 'root';
+                const password = document.getElementById('editHostPassword').value;
+                const port = document.getElementById('editHostPort').value.trim() || '22';
+                
+                if (!newIp || !newGroup) {
+                    alert("主机IP和所属组不能为空");
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/api/hosts', {
+                        method: 'PUT',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            action: 'update_host',
+                            group_name: originalGroup,
+                            host_ip: originalIp,
+                            new_host: {
+                                ip: newIp,
+                                group: newGroup,
+                                user: user,
+                                password: password,
+                                port: port
+                            }
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        alert(result.message);
+                        closeEditModal();
+                        await renderHostsTable();
+                    } else {
+                        alert(`错误: ${result.error}`);
+                    }
+                } catch (error) {
+                    console.error('更新主机失败:', error);
+                    alert('更新主机失败，请查看日志');
+                }
+            });
+            
+            // 组选择器变化时重新渲染主机表格
+            document.getElementById('hostGroupSelect').addEventListener('change', renderHostsTable);
+            
+            // 组搜索功能
+            document.getElementById('groupSearch').addEventListener('input', function() {
+                applyGroupSearch();
+                document.getElementById('clearGroupSearchBtn').style.display = 
+                    this.value.trim() !== '' ? 'flex' : 'none';
+            });
+            
+            // 清除组搜索
+            document.getElementById('clearGroupSearchBtn').addEventListener('click', function() {
+                document.getElementById('groupSearch').value = '';
+                applyGroupSearch();
+                this.style.display = 'none';
+            });
+            
+            // 主机搜索功能
+            document.getElementById('hostSearch').addEventListener('input', function() {
+                renderHostsTable();
+                document.getElementById('clearHostSearchBtn').style.display = 
+                    this.value.trim() !== '' ? 'flex' : 'none';
+            });
+            
+            // 清除主机搜索
+            document.getElementById('clearHostSearchBtn').addEventListener('click', function() {
+                document.getElementById('hostSearch').value = '';
+                renderHostsTable();
+                this.style.display = 'none';
+            });
+            
+            // 初始隐藏清除按钮
+            document.getElementById('clearGroupSearchBtn').style.display = 'none';
+            document.getElementById('clearHostSearchBtn').style.display = 'none';
+            
+            // 返回监控面板
+            document.getElementById('backToDashboard').addEventListener('click', () => {
+                window.location.href = '/';
+            });
+            
+            // 注销按钮
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                if (confirm('确定要注销当前账户吗？')) {
+                    window.location.href = '/logout';
+                }
+            });
+            
+            // 关闭模态框
+            document.querySelector('.close').addEventListener('click', closeEditModal);
+            document.getElementById('cancelEditBtn').addEventListener('click', closeEditModal);
+            window.addEventListener('click', (e) => {
+                if (e.target === document.getElementById('editHostModal')) {
+                    closeEditModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

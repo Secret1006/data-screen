@@ -1,0 +1,1781 @@
+/* 基础重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+    color: #ecf0f1;
+    line-height: 1.6;
+    padding: 20px;
+    min-height: 100vh;
+    transition: padding 0.3s;
+}
+
+.dashboard {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: rgba(25, 35, 60, 0.85);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 头部样式 - 优化 */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: rgba(15, 25, 45, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header-left h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #3498db;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.last-update {
+    font-size: 1rem;
+    color: #95a5a6;
+}
+
+/* 按钮样式优化 */
+.refresh-btn, .manage-btn {
+    padding: 10px 15px;
+    font-size: 0.95rem;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+}
+
+.refresh-btn {
+    background: rgba(52, 152, 219, 0.25);
+    color: #3498db;
+    border: 1px solid rgba(52, 152, 219, 0.4);
+}
+
+.refresh-btn:hover {
+    background: rgba(52, 152, 219, 0.4);
+}
+
+.manage-btn {
+    background: rgba(155, 89, 182, 0.25);
+    color: #9b59b6;
+    border: 1px solid rgba(155, 89, 182, 0.4);
+    margin-right: 10px;
+}
+
+.manage-btn:hover {
+    background: rgba(155, 89, 182, 0.4);
+}
+
+/* 统计卡片样式 - 放大 */
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    padding: 25px 30px;
+}
+
+.stat-card {
+    background: rgba(30, 40, 70, 0.7);
+    border-radius: 12px;
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.stat-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 25px;
+    font-size: 2rem;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    font-size: 1.1rem;
+    color: #bdc3c7;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* 卡片颜色变体 */
+.online .stat-icon {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+}
+
+.offline .stat-icon {
+    background: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+}
+
+.total .stat-icon {
+    background: rgba(52, 152, 219, 0.2);
+    color: #3498db;
+}
+
+.online .stat-value {
+    color: #2ecc71;
+}
+
+.offline .stat-value {
+    color: #e74c3c;
+}
+
+.total .stat-value {
+    color: #3498db;
+}
+
+/* 主机表格样式 - 修复滚动问题 */
+.hosts-table-container {
+    flex: 1;
+    padding: 0 30px 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 200px; /* 确保最小高度 */
+    overflow: hidden; /* 防止内部溢出 */
+}
+
+/* 主机表格头部样式 - 包含标题和搜索框 */
+.hosts-table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.hosts-table-header .header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+/* 分组选择器样式 */
+.group-select-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-width: 180px;
+}
+
+.group-select-container::after {
+    content: '\f078';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #3498db;
+    font-size: 0.9rem;
+}
+
+#groupSelect {
+    width: 100%;
+    padding: 10px 35px 10px 15px;
+    background: rgba(30, 40, 70, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    color: #ecf0f1;
+    font-size: 1rem;
+    appearance: none;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+#groupSelect:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    background: rgba(30, 40, 70, 0.9);
+}
+
+/* 主机搜索容器 */
+.host-search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* 搜索图标 */
+.search-icon {
+    position: absolute;
+    left: 15px;
+    color: #95a5a6;
+    z-index: 10;
+    font-size: 0.9rem;
+}
+
+.host-search-container input {
+    width: 250px;
+    padding: 10px 40px 10px 40px; /* 增加左侧内边距为图标腾出空间 */
+    background: rgba(30, 40, 70, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    color: #ecf0f1;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.host-search-container input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    background: rgba(30, 40, 70, 0.9);
+}
+
+/* 清除搜索按钮 */
+.clear-search-btn {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    color: #95a5a6;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    transition: all 0.3s;
+    display: none; /* 默认隐藏 */
+}
+
+.clear-search-btn:hover {
+    background: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+    transform: scale(1.1);
+}
+
+.hosts-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(30, 40, 70, 0.5);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden; /* 确保内部滚动 */
+}
+
+.hosts-table thead {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    background: rgba(15, 25, 45, 0.95);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.hosts-table tbody {
+    flex: 1;
+    overflow-y: auto;
+    display: block;
+    max-height: calc(100vh - 500px); /* 动态高度 */
+}
+
+.hosts-table tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.hosts-table th {
+    padding: 18px 25px;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #3498db;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 1.1rem;
+}
+
+.hosts-table td {
+    padding: 15px 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 1.05rem;
+}
+
+.hosts-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.hosts-table tbody tr:hover {
+    background: rgba(52, 73, 94, 0.3);
+}
+
+.host-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.host-id {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #3498db;
+    font-size: 1.15rem;
+}
+
+.host-ip {
+    font-size: 0.95rem;
+    color: #b0c4de;
+    font-family: monospace;
+}
+
+/* ================= 所属组样式 ================= */
+.group-cell {
+    color: #9b59b6; /* 紫色组名 */
+    font-weight: 500;
+}
+
+/* 状态指示器 - 放大 */
+.status-indicator {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    margin-right: 12px;
+}
+
+.status-indicator.success {
+    background: #2ecc71;
+    box-shadow: 0 0 10px #2ecc71;
+}
+
+.status-indicator.failed,
+.status-indicator.unreachable {
+    background: #e74c3c;
+    box-shadow: 0 0 10px #e74c3c;
+}
+
+.status-text {
+    font-weight: 500;
+    font-size: 1.05rem;
+}
+
+/* 底部样式 */
+.dashboard-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 30px;
+    background: rgba(15, 25, 45, 0.95);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.95rem;
+    color: #95a5a6;
+}
+
+.refresh-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.system-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-indicator.active {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #2ecc71;
+    box-shadow: 0 0 8px #2ecc71;
+}
+
+/* 模态框样式 - 放大 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    overflow: auto;
+}
+
+.modal-content {
+    background: rgba(25, 35, 60, 0.95);
+    margin: 3% auto;
+    padding: 25px;
+    border-radius: 10px;
+    width: 85%;
+    max-width: 1000px;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.modal-header h2 {
+    color: #9b59b6;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.8rem;
+}
+
+.close {
+    color: #aaa;
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #fff;
+}
+
+.modal-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    /* 确保两列高度一致 */
+    align-items: stretch;
+    height: auto;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 20px;
+}
+
+/* 主机列表样式 - 优化高度 */
+.hosts-list-container {
+    background: rgba(30, 40, 70, 0.6);
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* 关键：使容器高度与表单区域匹配 */
+    /* 移除底部内边距 */
+    padding-bottom: 10px;
+}
+
+/* 主机列表头部样式 - 新增 */
+.hosts-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.hosts-list-header h3 {
+    margin-bottom: 0; /* 移除原有底部间距 */
+    color: #3498db;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.3rem;
+}
+
+/* 主机列表搜索容器 - 新增 */
+.hosts-search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.hosts-search-container .search-icon {
+    position: absolute;
+    left: 15px;
+    color: #95a5a6;
+    z-index: 10;
+    font-size: 0.9rem;
+}
+
+.hosts-search-container input {
+    width: 200px;
+    padding: 10px 40px 10px 40px;
+    background: rgba(30, 40, 70, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    color: #ecf0f1;
+    font-size: 0.95rem;
+    transition: all 0.3s;
+}
+
+.hosts-search-container input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    background: rgba(30, 40, 70, 0.9);
+}
+
+/* 主机列表滚动容器 */
+.hosts-list-wrapper {
+    flex: 1; /* 关键：填充可用空间 */
+    overflow-y: auto;  /* 启用垂直滚动 */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    background: rgba(20, 30, 50, 0.5);
+    /* 移除固定高度，使用flex伸缩 */
+    /* 增加滚动条空间 */
+    margin-bottom: -10px;
+}
+
+.hosts-list-container h3 {
+    margin-bottom: 15px;
+    color: #3498db;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.3rem;
+    /* 减小标题下边距 */
+    margin-bottom: 10px;
+}
+
+.hosts-list-table {
+    width: 100%;
+    border-collapse: collapse;
+    /* 移除背景色，由滚动容器提供 */
+}
+
+.hosts-list-table th {
+    background: rgba(15, 25, 45, 0.9);
+    padding: 12px 18px;
+    text-align: left;
+    font-weight: 600;
+    color: #9b59b6;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 1.05rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.hosts-list-table td {
+    padding: 12px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 1.05rem;
+}
+
+.hosts-list-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.hosts-list-table tbody tr:hover {
+    background: rgba(52, 73, 94, 0.3);
+}
+
+/* 主机表单样式 - 优化高度 */
+.host-form-container {
+    background: rgba(30, 40, 70, 0.6);
+    border-radius: 8px;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* 关键：使容器高度与主机列表区域匹配 */
+    /* 增加底部内边距以匹配列表区域 */
+    padding-bottom: 30px;
+}
+
+.host-form-container h3 {
+    margin-bottom: 20px;
+    color: #2ecc71;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.3rem;
+    /* 减小标题下边距 */
+    margin-bottom: 15px;
+}
+
+.form-group {
+    margin-bottom: 15px; /* 减少表单组间距 */
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px; /* 减少标签下边距 */
+    color: #bdc3c7;
+    font-size: 1.05rem;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 10px; /* 减小内边距 */
+    background: rgba(20, 30, 50, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    color: #ecf0f1;
+    font-size: 1.05rem;
+}
+
+.form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.submit-btn {
+    background: rgba(46, 204, 113, 0.25);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+    padding: 10px 20px; /* 减小按钮内边距 */
+    font-size: 1.1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+    margin-top: 8px; /* 减小上边距 */
+}
+
+.submit-btn:hover {
+    background: rgba(46, 204, 113, 0.35);
+}
+
+.delete-host-btn {
+    background: rgba(231, 76, 60, 0.25);
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    padding: 6px 12px; /* 减小按钮内边距 */
+    font-size: 0.95rem;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s;
+}
+
+.delete-host-btn:hover {
+    background: rgba(231, 76, 60, 0.35);
+}
+
+.divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 20px 0; /* 减小分隔线边距 */
+}
+
+/* 无数据样式 */
+.no-data {
+    color: #e74c3c;
+    text-align: center;
+    padding: 20px; /* 减小内边距 */
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+/* 响应式设计 - 优化大屏显示 */
+@media (min-width: 1200px) {
+    .dashboard {
+        height: 95vh;
+    }
+    
+    .stats-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .hosts-table th, 
+    .hosts-table td {
+        padding: 20px 30px;
+    }
+    
+    .stat-value {
+        font-size: 3rem;
+    }
+    
+    .stat-label {
+        font-size: 1.15rem;
+    }
+    
+    /* 动态调整表格高度 */
+    .hosts-table tbody {
+        max-height: calc(100vh - 550px);
+    }
+    
+    /* 主机列表最大高度 */
+    .hosts-list-wrapper {
+        max-height: 600px;
+    }
+    
+    /* 主机管理面板高度优化 */
+    .hosts-list-container {
+        padding: 15px 20px;
+    }
+    
+    .host-form-container {
+        padding: 20px;
+    }
+}
+
+@media (min-width: 1600px) {
+    .dashboard {
+        max-width: 1600px;
+    }
+    
+    .stat-value {
+        font-size: 3.2rem;
+    }
+    
+    .stat-label {
+        font-size: 1.2rem;
+    }
+    
+    .hosts-table-container h2 {
+        font-size: 1.8rem;
+    }
+    
+    .host-id {
+        font-size: 1.25rem;
+    }
+    
+    .host-ip {
+        font-size: 1rem;
+    }
+    
+    /* 动态调整表格高度 */
+    .hosts-table tbody {
+        max-height: calc(100vh - 600px);
+    }
+    
+    /* 主机列表最大高度 */
+    .hosts-list-wrapper {
+        max-height: 650px;
+    }
+    
+    /* 主机管理面板高度优化 */
+    .hosts-list-container {
+        padding: 15px 20px;
+    }
+    
+    .host-form-container {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 900px) {
+    .modal-body {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        width: 95%;
+    }
+    
+    /* 主机列表最大高度 */
+    .hosts-list-wrapper {
+        max-height: 400px;
+    }
+    
+    /* 主机管理面板高度优化 */
+    .hosts-list-container {
+        padding: 15px;
+    }
+    
+    .host-form-container {
+        padding: 20px;
+    }
+    
+    /* 主机搜索框宽度 */
+    .host-search-container input {
+        width: 200px;
+    }
+    
+    /* 主机列表搜索框宽度 */
+    .hosts-search-container input {
+        width: 160px;
+    }
+}
+
+/* ================= 响应式设计 - 隐藏组列 ================= */
+@media (max-width: 1200px) {
+    .hosts-table th:nth-child(2), /* 现在所属组是第2列 */
+    .hosts-table td:nth-child(2) {
+        display: none; /* 在小屏幕上隐藏组列 */
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .header-right {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+    
+    .manage-btn, .refresh-btn {
+        margin-bottom: 10px;
+    }
+    
+    .dashboard-footer {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    
+    /* 主机表格头部响应式 */
+    .hosts-table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .hosts-table-header .header-left {
+        width: 100%;
+    }
+    
+    .group-select-container {
+        width: 100%;
+    }
+    
+    .host-search-container {
+        width: 100%;
+    }
+    
+    .host-search-container input {
+        width: 100%;
+        padding-left: 40px; /* 保持左侧图标空间 */
+    }
+    
+    /* 主机列表头部响应式 */
+    .hosts-list-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .hosts-search-container {
+        width: 100%;
+    }
+    
+    .hosts-search-container input {
+        width: 100%;
+        padding-left: 40px; /* 保持左侧图标空间 */
+    }
+    
+    /* 移动端表格高度调整 */
+    .hosts-table tbody {
+        max-height: 300px;
+    }
+    
+    /* 主机列表最大高度 */
+    .hosts-list-wrapper {
+        max-height: 300px;
+    }
+    
+    /* 主机管理面板高度优化 */
+    .hosts-list-container {
+        padding: 15px;
+    }
+    
+    .host-form-container {
+        padding: 15px;
+    }
+    
+    .hosts-list-table th, 
+    .hosts-list-table td {
+        padding: 10px 15px;
+    }
+    
+    .form-group {
+        margin-bottom: 12px;
+    }
+}
+
+/* 新增全屏样式 */
+body.fullscreen {
+    padding: 0;
+    overflow: hidden;
+}
+
+.fullscreen .dashboard {
+    border-radius: 0;
+    max-width: 100%;
+    height: 100vh;
+    margin: 0;
+    box-shadow: none;
+}
+
+.fullscreen .stats-container {
+    padding: 20px 30px;
+}
+
+.fullscreen .hosts-table-container {
+    flex: 1;
+    padding: 0 30px 20px;
+    height: calc(100% - 250px);
+    display: flex;
+    flex-direction: column;
+}
+
+.fullscreen .hosts-table {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.fullscreen .hosts-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.fullscreen .hosts-table tbody {
+    flex: 1;
+    overflow-y: auto;
+    display: block;
+}
+
+.fullscreen-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ecf0f1;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    transition: all 0.3s;
+}
+
+.fullscreen-toggle:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+/* ================= 用户信息样式 ================= */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 15px;
+    color: #3498db;
+    font-weight: 500;
+}
+
+.user-info i {
+    font-size: 1.2rem;
+}
+
+.logout-btn {
+    background: rgba(231, 76, 60, 0.25);
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.4);
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+}
+
+.logout-btn:hover {
+    background: rgba(231, 76, 60, 0.35);
+}
+
+/* ================= 登录页面样式 ================= */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a2a6c, #2c3e50);
+    padding: 20px;
+}
+
+.login-box {
+    background: rgba(25, 35, 60, 0.9);
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 450px;
+    padding: 40px;
+    text-align: center;
+}
+
+.login-logo {
+    margin-bottom: 30px;
+}
+
+.login-logo i {
+    font-size: 4rem;
+    color: #3498db;
+    margin-bottom: 15px;
+}
+
+.login-logo h1 {
+    font-size: 1.8rem;
+    color: #ecf0f1;
+    margin-bottom: 5px;
+}
+
+.login-logo p {
+    color: #95a5a6;
+    font-size: 1rem;
+}
+
+.login-form .form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 8px;
+    color: #bdc3c7;
+    font-weight: 500;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 14px 18px;
+    background: rgba(30, 40, 70, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #ecf0f1;
+    font-size: 1.05rem;
+    transition: all 0.3s;
+}
+
+.login-form input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    background: rgba(52, 152, 219, 0.8);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+}
+
+.login-btn:hover {
+    background: rgba(41, 128, 185, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.error-message {
+    color: #e74c3c;
+    margin-top: 15px;
+    font-weight: 500;
+    background: rgba(231, 76, 60, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+.login-footer {
+    margin-top: 30px;
+    color: #95a5a6;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 500px) {
+    .login-box {
+        padding: 30px 20px;
+    }
+    
+    .login-logo i {
+        font-size: 3.5rem;
+    }
+    
+    .login-logo h1 {
+        font-size: 1.5rem;
+    }
+}
+
+/* ================= 管理员密码修改按钮样式 ================= */
+.password-btn {
+    background: rgba(241, 196, 15, 0.25);
+    color: #f1c40f;
+    border: 1px solid rgba(241, 196, 15, 0.4);
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+}
+
+.password-btn:hover {
+    background: rgba(241, 196, 15, 0.35);
+}
+
+/* ================= 管理员密码修改成功消息样式 ================= */
+.success-message {
+    color: #2ecc71;
+    margin-top: 15px;
+    font-weight: 500;
+    background: rgba(46, 204, 113, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+/* ================= 返回链接样式 ================= */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #3498db;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.back-link:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+/* ================= 主机管理页面样式 ================= */
+.host-manager-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 25px;
+    padding: 25px;
+    height: calc(100% - 80px);
+    overflow: hidden; /* 防止整体溢出 */
+}
+
+/* 组管理区域样式 */
+.groups-section {
+    background: rgba(30, 40, 70, 0.7);
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden; /* 防止内部溢出 */
+}
+
+/* 组列表容器 - 添加固定高度和滚动条 */
+.groups-list-wrapper {
+    flex: 1; /* 占据剩余空间 */
+    overflow-y: auto;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    background: rgba(20, 30, 50, 0.5);
+}
+
+.groups-list {
+    padding: 10px;
+}
+
+/* 添加新组表单容器 */
+.add-group-form-wrapper {
+    margin-top: auto; /* 将表单推到底部 */
+}
+
+.add-group-form {
+    background: rgba(25, 35, 60, 0.8);
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 主机管理区域样式 */
+.hosts-section {
+    background: rgba(30, 40, 70, 0.7);
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    overflow: hidden; /* 防止内部溢出 */
+}
+
+/* 主机列表容器 - 添加固定高度和滚动条 */
+.hosts-section .hosts-table-container {
+    flex: 1; /* 占据剩余空间 */
+    overflow-y: auto;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    background: rgba(20, 30, 50, 0.5);
+}
+
+/* 确保表格头部固定 */
+.hosts-manager-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+/* 添加新主机表单样式 */
+.add-host-form {
+    background: rgba(25, 35, 60, 0.8);
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: auto; /* 将表单推到底部 */
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.section-header h2 {
+    color: #3498db;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.5rem;
+}
+
+/* 主机管理头部控件容器 */
+.hosts-header-controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+/* 搜索容器样式 */
+.group-search-container, 
+.host-search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: rgba(30, 40, 70, 0.7);
+    border-radius: 20px;
+    padding: 5px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s;
+}
+
+.group-search-container:hover, 
+.host-search-container:hover {
+    border-color: rgba(52, 152, 219, 0.5);
+}
+
+.group-search-container input, 
+.host-search-container input {
+    background: transparent;
+    border: none;
+    color: #ecf0f1;
+    padding: 5px 5px 5px 25px;
+    width: 150px;
+    outline: none;
+}
+
+.group-search-container .search-icon, 
+.host-search-container .search-icon {
+    position: absolute;
+    left: 10px;
+    color: #95a5a6;
+    font-size: 0.9rem;
+}
+
+.clear-search-btn {
+    background: none;
+    border: none;
+    color: #95a5a6;
+    cursor: pointer;
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s;
+}
+
+.clear-search-btn:hover {
+    color: #ecf0f1;
+}
+
+.back-btn {
+    background: rgba(52, 152, 219, 0.25);
+    color: #3498db;
+    border: 1px solid rgba(52, 152, 219, 0.3);
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+    margin-right: 10px;
+}
+
+.back-btn:hover {
+    background: rgba(52, 152, 219, 0.35);
+}
+
+.group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    background: rgba(25, 35, 60, 0.8);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s;
+}
+
+.group-item:hover {
+    background: rgba(52, 73, 94, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.group-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.group-name {
+    font-weight: 600;
+    color: #9b59b6;
+    font-size: 1.1rem;
+}
+
+.host-count {
+    color: #95a5a6;
+    font-size: 0.9rem;
+}
+
+.group-actions button {
+    background: rgba(231, 76, 60, 0.25);
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.group-actions button:hover {
+    background: rgba(231, 76, 60, 0.35);
+    transform: scale(1.1);
+}
+
+.no-groups {
+    text-align: center;
+    padding: 20px;
+    color: #95a5a6;
+    font-style: italic;
+}
+
+.add-group-form h3, .add-host-form h3 {
+    margin-bottom: 15px;
+    color: #2ecc71;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.2rem;
+}
+
+.hosts-manager-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.hosts-manager-table th {
+    background: rgba(15, 25, 45, 0.9);
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    color: #9b59b6;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 1.05rem;
+}
+
+.hosts-manager-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 1.05rem;
+}
+
+.hosts-manager-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.hosts-manager-table tbody tr:hover {
+    background: rgba(52, 73, 94, 0.3);
+}
+
+.actions-cell {
+    display: flex;
+    gap: 8px;
+}
+
+.edit-host-btn {
+    background: rgba(241, 196, 15, 0.25);
+    color: #f1c40f;
+    border: 1px solid rgba(241, 196, 15, 0.3);
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s;
+}
+
+.edit-host-btn:hover {
+    background: rgba(241, 196, 15, 0.35);
+}
+
+.delete-host-btn {
+    background: rgba(231, 76, 60, 0.25);
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s;
+}
+
+.delete-host-btn:hover {
+    background: rgba(231, 76, 60, 0.35);
+}
+
+.group-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.group-selector select {
+    background: rgba(30, 40, 70, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    color: #ecf0f1;
+    padding: 8px 12px;
+    font-size: 1rem;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+.form-row .form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ecf0f1;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    background: rgba(30, 40, 70, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    color: #ecf0f1;
+    padding: 10px;
+    font-size: 1rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.submit-btn {
+    background: rgba(46, 204, 113, 0.25);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+    width: 100%;
+    justify-content: center;
+}
+
+.submit-btn:hover {
+    background: rgba(46, 204, 113, 0.35);
+}
+
+.cancel-btn {
+    background: rgba(149, 165, 166, 0.25);
+    color: #95a5a6;
+    border: 1px solid rgba(149, 165, 166, 0.3);
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s;
+}
+
+.cancel-btn:hover {
+    background: rgba(149, 165, 166, 0.35);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    overflow: auto;
+}
+
+.modal-content {
+    background: #1e2a47;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    width: 80%;
+    max-width: 600px;
+    position: relative;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-header h2 {
+    color: #3498db;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.close {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: #fff;
+    text-decoration: none;
+}
+
+.no-data {
+    text-align: center;
+    color: #95a5a6;
+    padding: 20px;
+    font-style: italic;
+}
+
+/* ================= 编辑主机模态框布局修复 ================= */
+#editHostForm .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+#editHostForm .form-row .form-group {
+    flex: 1 0 calc(50% - 20px); /* 每个表单项占50%宽度减去间隙 */
+    min-width: 250px; /* 设置最小宽度防止在小屏幕上变形 */
+}
+
+#editHostForm .form-group:last-child {
+    flex: 1 0 100%; /* 密码输入框占满整行 */
+}
+
+/* 模态框内容区域优化 */
+.modal-body {
+    padding: 20px 0;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    #editHostForm .form-row .form-group {
+        flex: 1 0 100%; /* 小屏幕上每个表单项占满整行 */
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+    .host-manager-container {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+    
+    .groups-section, 
+    .hosts-section {
+        height: 50vh;
+    }
+    
+    .groups-list-wrapper,
+    .hosts-section .hosts-table-container {
+        max-height: 200px;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .hosts-header-controls {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .group-search-container, 
+    .host-search-container {
+        width: 100%;
+    }
+    
+    .group-search-container input, 
+    .host-search-container input {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .groups-list-wrapper,
+    .hosts-section .hosts-table-container {
+        max-height: 150px;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .group-selector {
+        width: 100%;
+    }
+}

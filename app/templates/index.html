@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主机状态监控大屏</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <button id="fullscreenToggle" class="fullscreen-toggle" title="全屏模式">
+        <i class="fas fa-expand"></i>
+    </button>
+    
+    <div class="dashboard">
+        <!-- 标题区域 -->
+        <header class="dashboard-header">
+            <div class="header-left">
+                <h1><i class="fas fa-server"></i> 主机状态监控大屏</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="usernameDisplay">{{ username }}</span>
+                </div>
+                <button id="changePasswordBtn" class="password-btn">
+                    <i class="fas fa-key"></i> 修改密码
+                </button>
+                <button id="logoutBtn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> 注销
+                </button>
+                <button id="manageHostsBtn" class="manage-btn" onclick="window.location.href='/host_manager'">
+                    <i class="fas fa-cog"></i> 主机管理
+                </button>
+                <button id="manualRefreshBtn" class="refresh-btn">
+                    <i class="fas fa-sync-alt"></i> 手动更新
+                </button>
+                <div class="last-update">最后更新: <span id="updateTime">--</span></div>
+            </div>
+        </header>
+        
+        <!-- 统计卡片区域 -->
+        <div class="stats-container">
+            <div class="stat-card online">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-value" id="onlineCount">0</div>
+                    <div class="stat-label">在线主机</div>
+                </div>
+            </div>
+            
+            <div class="stat-card offline">
+                <div class="stat-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-value" id="offlineCount">0</div>
+                    <div class="stat-label">离线主机</div>
+                </div>
+            </div>
+            
+            <div class="stat-card total">
+                <div class="stat-icon">
+                    <i class="fas fa-sitemap"></i>
+                </div>
+                <div class="stat-info">
+                    <div class="stat-value" id="totalCount">0</div>
+                    <div class="stat-label">总主机数</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 主机状态表格 -->
+        <div class="hosts-table-container">
+            <div class="hosts-table-header">
+                <h2><i class="fas fa-list"></i> 主机状态详情</h2>
+                <div class="host-search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="hostSearch" placeholder="搜索主机IP..." title="输入主机IP进行搜索">
+                    <button id="clearSearchBtn" class="clear-search-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <table class="hosts-table">
+                <thead>
+                    <tr>
+                        <th>主机/IP</th>
+                        <th>所属组</th> <!-- 所属组移到状态前面 -->
+                        <th>状态</th>
+                        <th>最后检测</th>
+                    </tr>
+                </thead>
+                <tbody id="hostsTableBody">
+                    <!-- 动态填充 -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- 底部信息 -->
+        <footer class="dashboard-footer">
+            <div class="refresh-info">
+                <i class="fas fa-sync-alt"></i> 每 <span id="refreshInterval">30</span> 秒自动刷新
+            </div>
+            <div class="system-status">
+                <span class="status-indicator active"></span>
+                <span>系统运行正常</span>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // 格式化日期时间函数
+        function formatDateTime(date) {
+            return `${date.getFullYear()}/${(date.getMonth()+1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+        }
+        
+        // 更新页面数据
+        async function updateDashboard() {
+            try {
+                // 显示加载状态
+                document.getElementById('updateTime').textContent = '加载中...';
+                document.getElementById('manualRefreshBtn').disabled = true;
+                document.getElementById('manualRefreshBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> 更新中';
+                
+                const response = await fetch('/run-ansible');
+                const data = await response.json();
+                
+                // 更新最后更新时间
+                const now = new Date();
+                document.getElementById('updateTime').textContent = formatDateTime(now);
+                
+                // 更新统计卡片
+                if (data.stats) {
+                    document.getElementById('totalCount').textContent = data.stats.total;
+                    document.getElementById('onlineCount').textContent = data.stats.online;
+                    document.getElementById('offlineCount').textContent = data.stats.offline;
+                }
+                
+                // 更新主机表格
+                const tableBody = document.getElementById('hostsTableBody');
+                tableBody.innerHTML = '';
+                
+                if (data.hosts_status && data.hosts_status.length > 0) {
+                    // 直接使用后端返回的已排序数据
+                    data.hosts_status.forEach(host => {
+                        const row = document.createElement('tr');
+                        row.dataset.host = host.host_ip;
+                        
+                        // 主机/IP列
+                        const hostCell = document.createElement('td');
+                        hostCell.innerHTML = `
+                            <div class="host-info">
+                                <div class="host-id">${host.host_id}</div>
+                                <div class="host-ip">${host.host_ip}</div>
+                            </div>
+                        `;
+                        row.appendChild(hostCell);
+                        
+                        // 所属组列 - 调整到状态前面
+                        const groupCell = document.createElement('td');
+                        groupCell.textContent = host.group || '未知组';
+                        groupCell.className = 'group-cell';
+                        row.appendChild(groupCell);
+                        
+                        // 状态列
+                        const statusCell = document.createElement('td');
+                        const statusIndicator = document.createElement('span');
+                        statusIndicator.className = `status-indicator ${host.status}`;
+                        statusIndicator.title = host.status === 'success' ? '在线' : (host.status === 'unreachable' ? '离线' : '未知');
+                        
+                        const statusText = document.createElement('span');
+                        statusText.textContent = host.status === 'success' ? '在线' : (host.status === 'unreachable' ? '离线' : '未知');
+                        statusText.className = 'status-text';
+                        
+                        statusCell.appendChild(statusIndicator);
+                        statusCell.appendChild(statusText);
+                        row.appendChild(statusCell);
+                        
+                        // 最后检测时间列
+                        const timeCell = document.createElement('td');
+                        timeCell.textContent = formatDateTime(now);
+                        row.appendChild(timeCell);
+                        
+                        tableBody.appendChild(row);
+                    });
+                } else {
+                    const row = document.createElement('tr');
+                    const cell = document.createElement('td');
+                    cell.colSpan = 4;
+                    
+                    if (data.error) {
+                        cell.textContent = data.error;
+                    } else {
+                        cell.textContent = '未检测到主机信息';
+                    }
+                    
+                    cell.className = 'no-data';
+                    row.appendChild(cell);
+                    tableBody.appendChild(row);
+                }
+                
+                // 恢复按钮状态
+                document.getElementById('manualRefreshBtn').disabled = false;
+                document.getElementById('manualRefreshBtn').innerHTML = '<i class="fas fa-sync-alt"></i> 手动更新';
+                
+                // 应用当前搜索条件
+                applyHostSearch();
+                
+            } catch (error) {
+                console.error('更新数据失败:', error);
+                document.getElementById('updateTime').textContent = '更新失败';
+                document.getElementById('manualRefreshBtn').disabled = false;
+                document.getElementById('manualRefreshBtn').innerHTML = '<i class="fas fa-sync-alt"></i> 手动更新';
+            }
+        }
+        
+        // 主机搜索功能
+        function applyHostSearch() {
+            const searchTerm = document.getElementById('hostSearch').value.toLowerCase();
+            const tableBody = document.getElementById('hostsTableBody');
+            const rows = tableBody.querySelectorAll('tr');
+            
+            // 移除现有的提示行
+            const existingNoResultsRow = document.getElementById('noResultsRow');
+            if (existingNoResultsRow) {
+                existingNoResultsRow.remove();
+            }
+            
+            let visibleCount = 0;
+            let hasRealRows = false;
+            
+            rows.forEach(row => {
+                if (row.id === 'noResultsRow') return;
+                
+                hasRealRows = true;
+                const hostIp = row.dataset.host ? row.dataset.host.toLowerCase() : '';
+                
+                if (hostIp.includes(searchTerm)) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            
+            // 如果没有匹配项
+            if (visibleCount === 0 && hasRealRows) {
+                const noResultsRow = document.createElement('tr');
+                noResultsRow.id = 'noResultsRow';
+                noResultsRow.innerHTML = `
+                    <td colspan="4" class="no-data">没有找到匹配的主机</td>
+                `;
+                tableBody.appendChild(noResultsRow);
+            }
+        }
+        
+        // 页面加载后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 立即更新一次
+            updateDashboard();
+            
+            // 设置定时器每30秒更新一次
+            setInterval(updateDashboard, 30000);
+            
+            // 绑定手动刷新按钮
+            document.getElementById('manualRefreshBtn').addEventListener('click', updateDashboard);
+            
+            // 全屏切换功能
+            document.getElementById('fullscreenToggle').addEventListener('click', function() {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else {
+                    document.documentElement.requestFullscreen();
+                }
+            });
+            
+            // 全屏状态变化监听
+            ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(event => {
+                document.addEventListener(event, updateFullscreenClass);
+            });
+            
+            function updateFullscreenClass() {
+                if (document.fullscreenElement || 
+                    document.webkitFullscreenElement || 
+                    document.mozFullScreenElement ||
+                    document.msFullscreenElement) {
+                    document.body.classList.add('fullscreen');
+                    document.getElementById('fullscreenToggle').innerHTML = '<i class="fas fa-compress"></i>';
+                } else {
+                    document.body.classList.remove('fullscreen');
+                    document.getElementById('fullscreenToggle').innerHTML = '<i class="fas fa-expand"></i>';
+                }
+            }
+            
+            // 初始检查全屏状态
+            updateFullscreenClass();
+            
+            // 主机搜索功能绑定
+            document.getElementById('hostSearch').addEventListener('input', function() {
+                applyHostSearch();
+                document.getElementById('clearSearchBtn').style.display = 
+                    this.value.trim() !== '' ? 'flex' : 'none';
+            });
+            
+            // 清除搜索按钮
+            document.getElementById('clearSearchBtn').addEventListener('click', function() {
+                document.getElementById('hostSearch').value = '';
+                applyHostSearch();
+                this.style.display = 'none';
+            });
+            
+            // 初始隐藏清除按钮
+            document.getElementById('clearSearchBtn').style.display = 'none';
+            
+            // 注销按钮事件
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                if (confirm('确定要注销当前账户吗？')) {
+                    window.location.href = '/logout';
+                }
+            });
+            
+            // 修改密码按钮事件
+            document.getElementById('changePasswordBtn').addEventListener('click', function() {
+                window.location.href = '/change_password';
+            });
+        });
+    </script>
+</body>
+</html>
