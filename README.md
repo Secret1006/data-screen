@@ -1,5 +1,5 @@
 # 主机状态监控系统
-![image](https://img.shields.io/badge/Windows-blue.svg)  ![image](https://img.shields.io/badge/ubuntu:20.04-blue.svg)  ![image](https://img.shields.io/badge/Docker-blue.svg)  ![image](https://img.shields.io/badge/Ansibler-blue.svg)  ![image](https://img.shields.io/badge/Shell-blue.svg)  ![image](https://img.shields.io/badge/Python-blue.svg)   ![image](https://img.shields.io/badge/html-blue.svg)   ![image](https://img.shields.io/badge/Python-css.svg)  
+![image](https://img.shields.io/badge/Windows-blue.svg)  ![image](https://img.shields.io/badge/ubuntu:20.04-blue.svg)  ![image](https://img.shields.io/badge/Docker-blue.svg)  ![image](https://img.shields.io/badge/Ansibler-blue.svg)  ![image](https://img.shields.io/badge/Shell-blue.svg)  ![image](https://img.shields.io/badge/Python-blue.svg)   ![image](https://img.shields.io/badge/HTML-blue.svg)   ![image](https://img.shields.io/badge/CSS-blue.svg)  
 基于Docker容器技术和Ansible自动化运维技术的主机状态监控系统，通过Web界面实时展示主机状态，并支持主机分组管理。
 
 #### 该项目镜像已上传至阿里云：  
