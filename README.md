@@ -56,5 +56,5 @@ docker run -d --name data-screen-app -p 80:5000 crpi-wjovngju7gnou1od.cn-guangzh
 ![image](https://github.com/Secret1006/data-screen/blob/master/images/11.png)  
 
 ## ⚠️ 当前问题
-- ### 当前系统尚未开发找回密码功能，所以初次登录并修改密码后需妥善保存管理员密码
-- ### 当前主机状态监控页面可能部署在个别电脑中可能会导致布局出现问题，还没有得到完全解决
+- ### 当前系统尚未开发找回密码功能，所以初次登录并修改密码后需妥善保存管理员密码！！！
+- ### 当前主机管理监控页面可能部署在个别电脑中可能会导致布局出现问题，还没有得到完全解决！！！
