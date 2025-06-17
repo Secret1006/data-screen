@@ -2,7 +2,7 @@
 
 基于Docker容器技术和Ansible自动化运维技术的主机状态监控系统，通过Web界面实时展示主机状态，并支持主机分组管理。
 
-#### 该项目镜像已上传至阿里云  
+#### 该项目镜像已上传至阿里云：  
 ```bash
 docker pull crpi-wjovngju7gnou1od.cn-guangzhou.personal.cr.aliyuncs.com/hupeiye/data-screen:latest
 ```
@@ -36,21 +36,25 @@ docker run -d --name data-screen-app -p 80:5000 crpi-wjovngju7gnou1od.cn-guangzh
   初始临时密码：admin123 (首次登录后请立即修改)  
 
 ## 🖼️ 效果演示
-### 管理员登录页面
+### 管理员登录页面：
 ![image](https://github.com/Secret1006/data-screen/blob/master/images/1.png)
-### 初次登录主机状态监控页面
+### 初次登录主机状态监控页面：
 ![image](https://github.com/Secret1006/data-screen/blob/master/images/2.png)
-### 点击"修改密码"按钮跳转至管理员密码修改页面
+### 点击"修改密码"按钮跳转至管理员密码修改页面：
 ![image](https://github.com/Secret1006/data-screen/blob/master/images/3.png)
-### 点击"主机管理"按钮跳转至主机管理页面
+### 点击"主机管理"按钮跳转至主机管理页面：
 ![image](https://github.com/Secret1006/data-screen/blob/master/images/4.png)
-### 添加/修改主机
+### 添加/修改主机：
 ![image](https://github.com/Secret1006/data-screen/blob/master/images/5.png)
 ![image](https://github.com/Secret1006/data-screen/blob/master/images/7.png)
-### 添加主机分组
+### 添加主机分组：
 ![image](https://github.com/Secret1006/data-screen/blob/master/images/12.png)
 ![image](https://github.com/Secret1006/data-screen/blob/master/images/13.png)
-### 主机状态监控页面效果
+### 主机状态监控页面效果：
 ![image](https://github.com/Secret1006/data-screen/blob/master/images/10.png)
-### 点击右上角图标进入全屏模式
-![image](https://github.com/Secret1006/data-screen/blob/master/images/11.png)
+### 点击右上角图标进入全屏模式：
+![image](https://github.com/Secret1006/data-screen/blob/master/images/11.png)  
+
+## ⚠️ 当前问题
+- ### 当前系统尚未开发找回密码功能，所以初次登录并修改密码后需妥善保存管理员密码
+- ### 当前主机状态监控页面可能部署在个别电脑中可能会导致布局出现问题，还没有得到完全解决
